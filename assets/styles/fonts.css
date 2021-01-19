@@ -1,0 +1,10 @@
+
+@font-face {
+  font-family: 'pixel';
+  src: url('/assets/fonts/PixelUniCode.ttf');
+}
+
+#useFont {
+  font-family: "pixel";
+  height: 0;
+}
