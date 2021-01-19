@@ -1,6 +1,6 @@
 let app, renderer, stage, loader, resources;
 
-let game, display;
+let game, gameTexts, display;
 
 let cam;
 
@@ -24,7 +24,7 @@ window.onload = function() {
         {
             width: window.innerWidth,
             height: window.innerHeight,
-            backgroundColor: 0xAAAAAA
+            backgroundColor: 0x63c64d
         }
     );
     const gd = document.querySelector('#gameDiv');
@@ -45,14 +45,15 @@ window.onload = function() {
     game = new PIXI.Container();
     stage.addChild(game);
 
+    gameTexts = new PIXI.Container();
+    stage.addChild(gameTexts);
+
     display = new PIXI.Container();
     stage.addChild(display);
-    display.screenX = 0;
-    display.screenY = 0;
 
     game.sortableChildren = true;
 
-    loader.baseUrl = "assets";
+    loader.baseUrl = "assets/images/";
     loader
         .add("bullet", "bullet.png")
         .add("player", "player.png")

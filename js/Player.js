@@ -1,5 +1,5 @@
 
-function Player(x, y) {    
+function Player(x, y) {
 
     this.pos = {x: 0, y: 0};
     this.speed = {x: 0, y: 0};
@@ -11,6 +11,19 @@ function Player(x, y) {
     this.spr = new PIXI.Sprite.from(resources.player2.texture);
     this.spr.anchor.set(0.5, 1.0);
     //this.spr.parentGroup = gameGroup;
+    
+    this.style = new PIXI.TextStyle({
+        fill: 'black',
+        fontSize: 16,
+        fontFamily: 'pixel'
+    });
+    
+    this.nicknameText = new PIXI.Text("Ahooj!", this.style);
+    this.nicknameText.anchor.set(0.5, 1.0);
+    this.nicknameText.y = -this.spr.height;
+    this.nicknameText.zIndex = 1000;
+    
+    display.addChild(this.nicknameText);
 
     this.container.addChild(this.spr);
 
@@ -46,9 +59,9 @@ Player.prototype.move = function (delta) {
     this.pos.x += this.speed.x * delta;
     this.pos.y += this.speed.y * delta;
 
-    this.spr.x = this.pos.x;
-    this.spr.y = this.pos.y;
-    this.container.zIndex = this.spr.y;
+    this.container.x = this.pos.x;
+    this.container.y = this.pos.y;
+    this.container.zIndex = this.pos.y;
 }
 
 Player.prototype.getMouseAngle = function() {

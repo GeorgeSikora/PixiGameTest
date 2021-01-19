@@ -17,6 +17,7 @@ function FunnyText (str, x, y) {
     
     this.refresh = (delta) => {
         
+        this.text.x = 20 + 10 * Math.cos(millis/200);
         this.text.y = 20 + 10 * Math.sin(millis/100);
 
         //app.ticker.remove(this.refresher); // for removing
