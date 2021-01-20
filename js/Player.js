@@ -1,10 +1,12 @@
 
-function Player(x, y) {
+function Player(nickname, x, y) {
 
-    this.pos = {x: 0, y: 0};
+    this.pos = {x: x, y: y};
     this.speed = {x: 0, y: 0};
     this.targetSpeed = {x: 0, y: 0};
     this.maxSpeed = 5;
+
+    this.nickname = nickname;
 
     this.container = new PIXI.Container();
 
@@ -14,16 +16,17 @@ function Player(x, y) {
     
     this.style = new PIXI.TextStyle({
         fill: 'black',
-        fontSize: 16,
+        fontSize: 64,
         fontFamily: 'pixel'
     });
     
-    this.nicknameText = new PIXI.Text("Ahooj!", this.style);
+    this.nicknameText = new PIXI.Text(this.nickname, this.style);
     this.nicknameText.anchor.set(0.5, 1.0);
     this.nicknameText.y = -this.spr.height;
     this.nicknameText.zIndex = 1000;
+    this.nicknameText.scale.set(0.2);
     
-    display.addChild(this.nicknameText);
+    this.container.addChild(this.nicknameText);
 
     this.container.addChild(this.spr);
 
@@ -35,8 +38,6 @@ function Player(x, y) {
     */
 
     game.addChild(this.container);
-    
-    this.spr.position = this.pos;
 }
 
 Player.prototype.move = function (delta) {
