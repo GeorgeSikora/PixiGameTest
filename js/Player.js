@@ -12,35 +12,38 @@ function Player(nickname, x, y) {
 
     this.spr = new PIXI.Sprite.from(resources.player2.texture);
     this.spr.anchor.set(0.5, 1.0);
-    //this.spr.parentGroup = gameGroup;
     
     this.style = new PIXI.TextStyle({
         fill: 'black',
         fontSize: 64,
         fontFamily: 'pixel'
     });
+    this.container.addChild(this.spr);
     
     this.nicknameText = new PIXI.Text(this.nickname, this.style);
     this.nicknameText.anchor.set(0.5, 1.0);
     this.nicknameText.y = -this.spr.height;
     this.nicknameText.zIndex = 1000;
     this.nicknameText.scale.set(0.2);
-    
     this.container.addChild(this.nicknameText);
 
-    this.container.addChild(this.spr);
-
-    /*
-    this.spr = new PIXI.Sprite.from(app.loader.resources.player.texture);
-    this.spr.anchor.set(0.5);
-    this.spr.parentGroup = gameGroup;
-    this.container.addChild(this.gun);
-    */
-
     game.addChild(this.container);
+    
+    var options = {
+        restitution: 0.5,
+        friction: 1,
+        density: 0.01,
+        restitution: 0.01
+    };
+    this.body = Bodies.rectangle(x, y, 32, 32, options);
+    Matter.Body.setCentre(this.body, {x: 0, y: 16}, true);
+
+    this.body.label = 'player';
+    World.add(world, this.body);
 }
 
 Player.prototype.move = function (delta) {
+
     if (keys[65]) { // A
         this.targetSpeed.x = -this.maxSpeed;
     }
@@ -57,8 +60,9 @@ Player.prototype.move = function (delta) {
     this.speed.x += (this.targetSpeed.x - this.speed.x) * 0.15 * delta;
     this.speed.y += (this.targetSpeed.y - this.speed.y) * 0.15 * delta;
     
-    this.pos.x += this.speed.x * delta;
-    this.pos.y += this.speed.y * delta;
+    Matter.Body.translate(this.body, {x: this.speed.x, y: this.speed.y});
+
+    this.pos = this.body.position;    
 
     this.container.x = this.pos.x;
     this.container.y = this.pos.y;
