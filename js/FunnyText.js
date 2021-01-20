@@ -9,7 +9,7 @@ function FunnyText (str, x, y) {
         fontFamily: 'pixel'
     });
 
-    this.text = new PIXI.Text("Toto je testíček fontíku", this.style);
+    this.text = new PIXI.Text("Toto je test fontu ěšščřřžžá", this.style);
     this.text.x = 10;
     //text1.position = stage.pivot;
     //text1.anchor.set(0.5);
