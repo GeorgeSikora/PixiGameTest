@@ -31,5 +31,31 @@ Camera.prototype.refresh = function() {
     game.scale.set(this.scale);
 }
 
+Camera.prototype.isInView = function(o) {
 
+    const vw = window.innerWidth / 2 / this.scale; // view width
+    const vh = window.innerHeight / 2 / this.scale;// view height
 
+    const ox = o.pos.x; // object x pos
+    const oy = o.pos.y; // object y pos
+
+    const ow = o.container.width / 2; // object width
+    const oh = o.container.height / 2; // object height
+
+    //if (o.spr == undefined) return true;
+
+    const oax = (o.spr.anchor.x - 0.5) * o.container.width; // object anchor x
+    const oay = (o.spr.anchor.y - 0.5) * o.container.height; // object anchor y
+
+    return (ox + ow - oax > cam.pos.x - vw
+        && ox - ow - oax < cam.pos.x + vw
+        && oy + oh - oay > cam.pos.y - vh
+        && oy - oh - oay < cam.pos.y + vh);
+}
+
+Camera.prototype.getView = function() {
+    return {
+        x: window.innerWidth / this.scale,
+        y: window.innerHeight / this.scale
+    };
+}
