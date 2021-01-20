@@ -1,8 +1,14 @@
 let app, renderer, stage, loader, resources;
-
 let game, display;
-
 let cam;
+
+var Engine = Matter.Engine,
+    Render = Matter.Render,
+    World = Matter.World,
+    Events = Matter.Events,
+    Bodies = Matter.Bodies;
+
+engine = Engine.create();
 
 let objects = [];
 
@@ -16,9 +22,12 @@ let bulletSpeed = 15;
 let text1;
 let funnyText;
 
-var millis = 0, millisStart = new Date().getTime();
+var millisStart = new Date().getTime();
 
 window.onload = function() {
+
+    world = engine.world;
+    engine.world.gravity.y = 0;
 
     // PIXI.utils.skipHello();
 
@@ -27,10 +36,10 @@ window.onload = function() {
             width: window.innerWidth,
             height: window.innerHeight,
             backgroundColor: 0x63c64d,
-            antialias: false,
-            roundPixels: true,
+            antialias: false
         }
     );
+
     const gd = document.querySelector('#gameDiv');
     gd.appendChild(app.view);
     gd.addEventListener('pointerdown', mousePressed);
@@ -59,7 +68,9 @@ window.onload = function() {
         .add("bullet", "bullet.png")
         .add("player", "player.png")
         .add("player2", "player2.png")
-        .add("tree", "tree.png");
+        .add("tree", "tree.png")
+        .add("coin", "coin.png")
+    ;
 
     loader.onProgress.add(showProgress);
     loader.onComplete.add(doneLoading);
@@ -68,7 +79,7 @@ window.onload = function() {
 }
 
 function resize() {
-    console.log(window.innerWidth, window.innerHeight);
+    console.log(window.innerWidth, window.innerHeight, cam.getView());
     renderer.resize(window.innerWidth, window.innerHeight);
 }
 window.onresize = resize;
@@ -91,8 +102,28 @@ function createBullet(pos, angle) {
     return bullet;
 }
 
+function millis() {
+    return new Date().getTime() - millisStart;
+}
+
 function gameLoop(delta) {
-    millis = new Date().getTime() - millisStart;
+    Engine.update(engine);
+
+    var visibleCount = 0;
+    var start = millis();
+
+
+    for (var i = 0; i < objects.length; i++) {
+        var o = objects[i];
+        if (cam.isInView(o)) {
+            objects[i].container.visible = true;
+            visibleCount++;
+        } else {
+            objects[i].container.visible = false;
+        }
+    }
+    console.log('View handler:', millis() - start);
+    console.log('Visible objects:', visibleCount);
 
     player.targetSpeed.x = 0;
     player.targetSpeed.y = 0;
@@ -109,6 +140,7 @@ function gameLoop(delta) {
             child.y = child.screenY - stage.y + stage.pivot.y;
         }
     });
+
 
     //stage.children.sort((a, b) => b.zIndex - a.zIndex);
 }
@@ -159,10 +191,12 @@ function loadMap() {
     for (var i = 0; i < 5000; i++) {
         addRandTree();
     }
+
+    //objects.push(new Coin(0, 0));
 }
 
 function addRandTree() {
-    objects.push(new Tree((Math.random()*2-1)*400, (Math.random()*2-1)*400));
+    objects.push(new Tree((Math.random()*2-1)*5000, (Math.random()*2-1)*5000)); 
 }
 
 function reportError(e) {
