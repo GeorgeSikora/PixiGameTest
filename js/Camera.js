@@ -22,15 +22,14 @@ Camera.prototype.refresh = function() {
     
     this.scale += (this.targetScale - this.scale) * this.scaleEasing;
 
-    //stage.pivot.x = player.position.x;
-    //stage.pivot.y = player.position.y;
-
-    //(0,0) for us is center of the screen
     game.position.x = app.renderer.width/2;
     game.position.y = app.renderer.height/2;
-    //now specify which point INSIDE stage must be (0,0)
+    
     game.pivot.x = this.pos.x;
     game.pivot.y = this.pos.y;
-    //stage.pivot.set(this.pos.x, this.pos.y);
+
     game.scale.set(this.scale);
 }
+
+
+
