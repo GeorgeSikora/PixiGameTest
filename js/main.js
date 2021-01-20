@@ -1,8 +1,10 @@
 let app, renderer, stage, loader, resources;
 
-let game, gameTexts, display;
+let game, display;
 
 let cam;
+
+let objects = [];
 
 let player, tree;
 let keys = {};
@@ -24,7 +26,9 @@ window.onload = function() {
         {
             width: window.innerWidth,
             height: window.innerHeight,
-            backgroundColor: 0x63c64d
+            backgroundColor: 0x63c64d,
+            antialias: false,
+            roundPixels: true,
         }
     );
     const gd = document.querySelector('#gameDiv');
@@ -44,9 +48,6 @@ window.onload = function() {
 
     game = new PIXI.Container();
     stage.addChild(game);
-
-    gameTexts = new PIXI.Container();
-    stage.addChild(gameTexts);
 
     display = new PIXI.Container();
     stage.addChild(display);
@@ -136,7 +137,7 @@ function showProgress(e) {
 function doneLoading(e) {
     console.log("DONE LOADING!");
 
-    player = new Player(100, 100);
+    player = new Player('Jurkos', 0, 0);
 
     cam = new Camera(player);
 
@@ -154,13 +155,14 @@ function doneLoading(e) {
 } 
 
 function loadMap() {
-    tree = new PIXI.Sprite.from(resources.tree.texture);
-    tree.anchor.set(0.5, 1.0);
-    tree.x = -200;
-    tree.y = -100;
-    tree.zIndex = tree.y;
-    //tree.parentGroup = gameGroup;
-    game.addChild(tree);
+    
+    for (var i = 0; i < 5000; i++) {
+        addRandTree();
+    }
+}
+
+function addRandTree() {
+    objects.push(new Tree((Math.random()*2-1)*400, (Math.random()*2-1)*400));
 }
 
 function reportError(e) {
