@@ -30,7 +30,7 @@ function loaderComplete(e) {
     objects.push(new FunnyText("Toto je test fontu ěšščřřžžá", 10, 10));
 
     // game loop
-    app.ticker.add(gameLoop);
+    gra.ticker.add(gameLoop);
 }
 
 function loaderError(e) {

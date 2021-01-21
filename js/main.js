@@ -1,12 +1,15 @@
-let app, renderer, stage, loader, resources;
-let game, display;
+let gra, renderer, stage, loader, resources;
 
-var Engine = Matter.Engine,
-    //Render = Matter.Render,
-    World = Matter.World,
-    Events = Matter.Events,
-    Bodies = Matter.Bodies;
+let game;
 
+const Engine = Matter.Engine;
+//const Render = Matter.Render;
+const World = Matter.World;
+const Events = Matter.Events;
+const Bodies = Matter.Bodies;
+const Body = Matter.Body;
+
+let playerCollisionGroup = Body.nextGroup(true);
 let objects = [];
 let uiObjects =  [];
 
@@ -22,27 +25,22 @@ window.onload = function() {
     PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST; // disable pixels smoothing
     // PIXI.utils.skipHello();
 
-    app = new PIXI.Application({
+    gra = new PIXI.Application({
         width: window.innerWidth,
         height: window.innerHeight,
         backgroundColor: 0x63c64d,
         transparent: false
     });
 
-    $('#gameDiv').append(app.view);
+    $('#gameDiv').append(gra.view);
 
-    renderer = app.renderer;
-    stage = app.stage;
-    loader = app.loader;
-    resources = app.loader.resources;
-    
-    //stage.sortableChildren = true;
+    renderer = gra.renderer;
+    stage = gra.stage;
+    loader = gra.loader;
+    resources = gra.loader.resources;
 
     game = new PIXI.Container();
     stage.addChild(game);
-
-    display = new PIXI.Container();
-    stage.addChild(display);
 
     game.sortableChildren = true;
     
@@ -58,12 +56,14 @@ window.onload = function() {
 }
 
 function gameLoop(delta) {
+
     Engine.update(engine);
 
     for (var i = 0; i < objects.length; i++) {
         var o = objects[i];
+
         if (o.onScreen) {
-            o.refresh();
+            o.refresh(delta);
             continue;
         }
         if (cam.isInView(o)) {
@@ -77,13 +77,4 @@ function gameLoop(delta) {
     cam.refresh();
 
     player.move(delta);
-
-    stage.children.forEach(child => {
-        if (child.screenX && child.screenY) {
-            child.x = child.screenX - stage.x + stage.pivot.x;
-            child.y = child.screenY - stage.y + stage.pivot.y;
-        }
-    });
-
-    //stage.children.sort((a, b) => b.zIndex - a.zIndex);
 }

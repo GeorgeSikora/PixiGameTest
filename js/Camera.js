@@ -6,9 +6,6 @@ function Camera (targetObject) {
 
     this.scale = 3;
     this.targetScale = 3;
-    
-    this.width = 0;
-    this.height = 0;
 
     this.targetObj = targetObject;
 
@@ -18,6 +15,8 @@ function Camera (targetObject) {
 
 Camera.prototype.refresh = function() {
 
+    this.scale = 3 + 0.2 * Math.sin(millis()/100.0);
+
     this.targetPos = this.targetObj.pos;
 
     this.pos.x += (this.targetPos.x - this.pos.x) * this.moveEasing;
@@ -25,8 +24,8 @@ Camera.prototype.refresh = function() {
     
     this.scale += (this.targetScale - this.scale) * this.scaleEasing;
 
-    game.position.x = app.renderer.width/2;
-    game.position.y = app.renderer.height/2;
+    game.position.x = gra.renderer.width / 2;
+    game.position.y = gra.renderer.height /2;
     
     game.pivot.x = this.pos.x;
     game.pivot.y = this.pos.y;

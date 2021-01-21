@@ -15,6 +15,9 @@ function Player(nickname, x, y) {
     this.spr.anchor.set(0.5, 1.0);
     this.container.addChild(this.spr);
 
+    this.w = this.spr.width;
+    this.h = this.spr.height;
+
     this.style = new PIXI.TextStyle({
         fill: 'black',
         fontSize: 64,
@@ -36,9 +39,9 @@ function Player(nickname, x, y) {
         */
     };
     this.body = Bodies.rectangle(x, y, 24, 16, options);
-    Matter.Body.setCentre(this.body, {x: 0, y: 8}, true);
-
     this.body.label = 'player';
+    this.body.collisionFilter.group = playerCollisionGroup;
+    Matter.Body.setCentre(this.body, {x: 0, y: 8}, true);
     World.add(world, this.body);
 }
 
@@ -62,7 +65,7 @@ Player.prototype.move = function (delta) {
         this.targetSpeed.y = this.maxSpeed;
     }
 
-    this.pos = this.body.position;    
+    this.pos = this.body.position;
 
     this.container.x = this.pos.x;
     this.container.y = this.pos.y;
@@ -75,15 +78,15 @@ Player.prototype.move = function (delta) {
 }
 
 Player.prototype.getMouseAngle = function() {
-    const mouse = app.renderer.plugins.interaction.mouse.global;
+    const mouse = gra.renderer.plugins.interaction.mouse.global;
 
     if (cam.targetObj != this) return 0;
 
     var x = mouse.x + (cam.pos.x - this.pos.x);
     var y = mouse.y + (cam.pos.y - this.pos.y);
     
-    const w = app.renderer.width;
-    const h = app.renderer.height;
+    const w = gra.renderer.width;
+    const h = gra.renderer.height;
 
     return Math.atan2(y - h/2, x - w/2);
 }
@@ -91,8 +94,9 @@ Player.prototype.getMouseAngle = function() {
 Player.prototype.shot = function() {
 
     const angle = this.getMouseAngle();
-    const x = player.pos.x;
-    const y = player.pos.y;
+
+    const x = this.pos.x;
+    const y = this.pos.y - this.h / 2;
 
     objects.push(new Bullet(x, y, angle));
 }
