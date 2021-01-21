@@ -6,6 +6,9 @@ function Camera (targetObject) {
 
     this.scale = 3;
     this.targetScale = 3;
+    
+    this.width = 0;
+    this.height = 0;
 
     this.targetObj = targetObject;
 
@@ -29,6 +32,9 @@ Camera.prototype.refresh = function() {
     game.pivot.y = this.pos.y;
 
     game.scale.set(this.scale);
+    
+    this.width = innerWidth / this.scale;
+    this.height = innerHeight / this.scale;
 }
 
 Camera.prototype.isInView = function(o) {
@@ -38,19 +44,17 @@ Camera.prototype.isInView = function(o) {
 
     const ox = o.pos.x; // object x pos
     const oy = o.pos.y; // object y pos
+    
+    const ow = o.container.width; // object width
+    const oh = o.container.height; // object height
 
-    const ow = o.container.width / 2; // object width
-    const oh = o.container.height / 2; // object height
+    const oax = (o.spr.anchor.x - 0.5) * ow; // object anchor x
+    const oay = (o.spr.anchor.y - 0.5) * oh; // object anchor y
 
-    //if (o.spr == undefined) return true;
-
-    const oax = (o.spr.anchor.x - 0.5) * o.container.width; // object anchor x
-    const oay = (o.spr.anchor.y - 0.5) * o.container.height; // object anchor y
-
-    return (ox + ow - oax > cam.pos.x - vw
-        && ox - ow - oax < cam.pos.x + vw
-        && oy + oh - oay > cam.pos.y - vh
-        && oy - oh - oay < cam.pos.y + vh);
+    return (ox + ow/2 - oax > this.pos.x - vw
+        && ox - ow/2 - oax < this.pos.x + vw
+        && oy + oh/2 - oay > this.pos.y - vh
+        && oy - oh/2 - oay < this.pos.y + vh);
 }
 
 Camera.prototype.getView = function() {

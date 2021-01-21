@@ -9,16 +9,17 @@ function Player(nickname, x, y) {
     this.nickname = nickname;
 
     this.container = new PIXI.Container();
+    game.addChild(this.container);
 
     this.spr = new PIXI.Sprite.from(resources.player2.texture);
     this.spr.anchor.set(0.5, 1.0);
-    
+    this.container.addChild(this.spr);
+
     this.style = new PIXI.TextStyle({
         fill: 'black',
         fontSize: 64,
         fontFamily: 'pixel'
     });
-    this.container.addChild(this.spr);
     
     this.nicknameText = new PIXI.Text(this.nickname, this.style);
     this.nicknameText.anchor.set(0.5, 1.0);
@@ -27,22 +28,26 @@ function Player(nickname, x, y) {
     this.nicknameText.scale.set(0.2);
     this.container.addChild(this.nicknameText);
 
-    game.addChild(this.container);
-    
     var options = {
-        restitution: 0.5,
-        friction: 1,
-        density: 0.01,
-        restitution: 0.01
+        /*
+        restitution: 0,
+        friction: 0,
+        density: 0.1
+        */
     };
-    this.body = Bodies.rectangle(x, y, 32, 32, options);
-    Matter.Body.setCentre(this.body, {x: 0, y: 16}, true);
+    this.body = Bodies.rectangle(x, y, 24, 16, options);
+    Matter.Body.setCentre(this.body, {x: 0, y: 8}, true);
 
     this.body.label = 'player';
     World.add(world, this.body);
 }
 
 Player.prototype.move = function (delta) {
+
+    this.targetSpeed.x = 0;
+    this.targetSpeed.y = 0;
+
+    this.spr.rotation = this.body.angle;
 
     if (keys[65]) { // A
         this.targetSpeed.x = -this.maxSpeed;
@@ -57,16 +62,16 @@ Player.prototype.move = function (delta) {
         this.targetSpeed.y = this.maxSpeed;
     }
 
-    this.speed.x += (this.targetSpeed.x - this.speed.x) * 0.15 * delta;
-    this.speed.y += (this.targetSpeed.y - this.speed.y) * 0.15 * delta;
-    
-    Matter.Body.translate(this.body, {x: this.speed.x, y: this.speed.y});
-
     this.pos = this.body.position;    
 
     this.container.x = this.pos.x;
     this.container.y = this.pos.y;
     this.container.zIndex = this.pos.y;
+    
+    this.speed.x += (this.targetSpeed.x - this.speed.x) * 0.15 * delta;
+    this.speed.y += (this.targetSpeed.y - this.speed.y) * 0.15 * delta;
+    
+    Matter.Body.translate(this.body, {x: this.speed.x, y: this.speed.y});
 }
 
 Player.prototype.getMouseAngle = function() {
@@ -86,7 +91,8 @@ Player.prototype.getMouseAngle = function() {
 Player.prototype.shot = function() {
 
     const angle = this.getMouseAngle();
+    const x = player.pos.x;
+    const y = player.pos.y;
 
-    let bullet = createBullet(player.pos, angle);
-    bullets.push(bullet);
+    objects.push(new Bullet(x, y, angle));
 }
