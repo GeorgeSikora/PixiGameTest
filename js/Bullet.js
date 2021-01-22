@@ -4,7 +4,7 @@ class Bullet extends GameObject {
         super(x, y);
 
         this.diameter = 8; // 64
-        this.speed = 10;
+        this.speed = 16;
         this.angle = angle;
 
         this.spr = new PIXI.Sprite.from(resources.bullet.texture);

@@ -50,6 +50,8 @@ Player.prototype.move = function (delta) {
     this.targetSpeed.x = 0;
     this.targetSpeed.y = 0;
 
+    this.body.angle = 45;
+
     this.spr.rotation = this.body.angle;
 
     if (keys[65]) { // A

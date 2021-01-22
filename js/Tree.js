@@ -13,7 +13,7 @@ class Tree extends GameObject {
         this.container.addChild(this.spr);
 
         var options = {
-            isStatic: true
+            //isStatic: true
         };
         this.body = Bodies.rectangle(x, y, 16, 16, options);
         this.body.label = 'tree';
@@ -26,6 +26,10 @@ class Tree extends GameObject {
     }
 
     refresh() {
+
+        this.spr.rotation = this.body.angle;
+        this.container.position = this.body.position;
+
         if (this.container.visible) {
             if (hitTest(this, player)) {
                 this.container.alpha = 0.7;
@@ -33,6 +37,10 @@ class Tree extends GameObject {
                 this.container.alpha = 1.0;
             }
         }
+
+        //Matter.Body.translate(this.body, {x: 0.01, y: 0});
+        //this.body.position;
+        this.body.angle = 45;
     }
 
     remove() {

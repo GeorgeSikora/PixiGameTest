@@ -15,7 +15,7 @@ function Camera (targetObject) {
 
 Camera.prototype.refresh = function() {
 
-    this.scale = 3 + 0.2 * Math.sin(millis()/100.0);
+    //this.scale = 3 + 0.2 * Math.sin(millis()/100.0);
 
     this.targetPos = this.targetObj.pos;
 
